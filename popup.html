@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>UTC Converter</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="header-content">
+        <h1>UTC Converter</h1>
+        <div id="currentTime" class="current-time"></div>
+      </div>
+      <button id="settingsBtn" class="icon-btn" title="Settings">Settings</button>
+    </header>
+
+    <div id="mainView" class="view">
+      <div class="converter-section">
+        <div class="input-group">
+          <label class="input-label">UTC TIME</label>
+          <div class="input-wrapper">
+            <input
+              id="utcInput"
+              type="text"
+              class="time-input utc-input"
+              placeholder="2026-02-13T07:24:37Z"
+              autocomplete="off"
+              spellcheck="false"
+            />
+            <div class="input-actions">
+              <button class="input-action-btn" data-action="now-utc" title="Current UTC time">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <polyline points="12 6 12 12 16 14"></polyline>
+                </svg>
+              </button>
+              <button class="input-action-btn" data-action="copy-utc" title="Copy">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                  <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                </svg>
+              </button>
+            </div>
+          </div>
+          <div class="format-display">
+            <div class="format-item">
+              <span class="format-label">ISO 8601</span>
+              <span id="utcIso" class="format-value"></span>
+            </div>
+            <div class="format-item">
+              <span class="format-label">Unix</span>
+              <span id="utcUnix" class="format-value"></span>
+            </div>
+            <div class="format-item">
+              <span class="format-label">Readable</span>
+              <span id="utcReadable" class="format-value"></span>
+            </div>
+          </div>
+        </div>
+
+        <div class="converter-divider">
+          <div class="divider-line"></div>
+          <div class="divider-icon">&#x21C5;</div>
+          <div class="divider-line"></div>
+        </div>
+
+        <div class="input-group">
+          <label class="input-label">LOCAL TIME</label>
+          <div class="input-wrapper">
+            <input
+              id="localInput"
+              type="text"
+              class="time-input local-input"
+              placeholder="13/02/2026 01:24:37"
+              autocomplete="off"
+              spellcheck="false"
+            />
+            <div class="input-actions">
+              <button class="input-action-btn" data-action="now-local" title="Current local time">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <polyline points="12 6 12 12 16 14"></polyline>
+                </svg>
+              </button>
+              <button class="input-action-btn" data-action="copy-local" title="Copy">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                  <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                </svg>
+              </button>
+            </div>
+          </div>
+          <div class="format-display">
+            <div class="format-item">
+              <span class="format-label">ISO 8601</span>
+              <span id="localIso" class="format-value"></span>
+            </div>
+            <div class="format-item">
+              <span class="format-label">Timezone</span>
+              <span id="timezoneInfo" class="format-value"></span>
+            </div>
+            <div class="format-item">
+              <span class="format-label">Offset</span>
+              <span id="timeDiff" class="format-value"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="quick-actions">
+        <button id="clearBtn" class="quick-btn">CLEAR ALL</button>
+      </div>
+
+      <div id="historySection" class="history-section hidden">
+        <div class="history-header">
+          <h3>RECENT CONVERSIONS</h3>
+          <button id="clearHistoryBtn" class="clear-history-btn">Clear All</button>
+        </div>
+        <div id="historyList" class="history-list"></div>
+      </div>
+    </div>
+
+    <div id="settingsView" class="view hidden">
+      <div class="settings-header">
+        <button id="backBtn" class="back-btn">&#x2190; BACK</button>
+        <h2>SETTINGS</h2>
+      </div>
+
+      <div class="settings-content">
+        <div class="settings-section">
+          <h3>DISPLAY PREFERENCES</h3>
+          <div class="setting-item">
+            <div class="setting-info">
+              <div class="setting-name">24-Hour Format</div>
+              <div class="setting-description">Display times in 24-hour format</div>
+            </div>
+            <label class="toggle-switch">
+              <input type="checkbox" id="format24Toggle" checked>
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+          <div class="setting-item">
+            <div class="setting-info">
+              <div class="setting-name">Show Milliseconds</div>
+              <div class="setting-description">Include milliseconds in time display</div>
+            </div>
+            <label class="toggle-switch">
+              <input type="checkbox" id="millisecondsToggle">
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+          <div class="setting-item">
+            <div class="setting-info">
+              <div class="setting-name">Auto-Convert on Input</div>
+              <div class="setting-description">Automatically convert as you type</div>
+            </div>
+            <label class="toggle-switch">
+              <input type="checkbox" id="autoConvertToggle" checked>
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+        </div>
+
+        <div class="settings-section">
+          <h3>TIMEZONE</h3>
+          <div class="setting-item">
+            <div class="setting-info">
+              <div class="setting-name">Use System Timezone</div>
+              <div class="setting-description">Automatically detect local timezone</div>
+            </div>
+            <label class="toggle-switch">
+              <input type="checkbox" id="autoTimezoneToggle" checked>
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+          <div class="setting-item" id="manualOffsetSetting">
+            <div class="setting-info">
+              <div class="setting-name">Manual UTC Offset</div>
+              <div class="setting-description">Set custom timezone offset</div>
+            </div>
+            <select id="timezoneOffset" class="history-limit-select">
+              <option value="-12">UTC-12:00</option>
+              <option value="-11">UTC-11:00</option>
+              <option value="-10">UTC-10:00</option>
+              <option value="-9">UTC-09:00</option>
+              <option value="-8">UTC-08:00</option>
+              <option value="-7">UTC-07:00</option>
+              <option value="-6">UTC-06:00</option>
+              <option value="-5">UTC-05:00</option>
+              <option value="-4">UTC-04:00</option>
+              <option value="-3">UTC-03:00</option>
+              <option value="-2">UTC-02:00</option>
+              <option value="-1">UTC-01:00</option>
+              <option value="0">UTC+00:00</option>
+              <option value="1">UTC+01:00</option>
+              <option value="2">UTC+02:00</option>
+              <option value="3">UTC+03:00</option>
+              <option value="4">UTC+04:00</option>
+              <option value="5">UTC+05:00</option>
+              <option value="5.5">UTC+05:30</option>
+              <option value="5.75">UTC+05:45</option>
+              <option value="6">UTC+06:00</option>
+              <option value="6.5">UTC+06:30</option>
+              <option value="7">UTC+07:00</option>
+              <option value="8">UTC+08:00</option>
+              <option value="9">UTC+09:00</option>
+              <option value="9.5">UTC+09:30</option>
+              <option value="10">UTC+10:00</option>
+              <option value="10.5">UTC+10:30</option>
+              <option value="11">UTC+11:00</option>
+              <option value="12">UTC+12:00</option>
+              <option value="12.75">UTC+12:45</option>
+              <option value="13">UTC+13:00</option>
+              <option value="14">UTC+14:00</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="settings-section">
+          <h3>HISTORY</h3>
+          <div class="setting-item">
+            <div class="setting-info">
+              <div class="setting-name">Save Conversion History</div>
+              <div class="setting-description">Keep track of recent conversions</div>
+            </div>
+            <label class="toggle-switch">
+              <input type="checkbox" id="historyToggle" checked>
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+          <div class="setting-item">
+            <div class="setting-info">
+              <div class="setting-name">History Limit</div>
+              <div class="setting-description">Maximum number of items to keep</div>
+            </div>
+            <select id="historyLimit" class="history-limit-select">
+              <option value="5">5 items</option>
+              <option value="10" selected>10 items</option>
+              <option value="20">20 items</option>
+              <option value="50">50 items</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>
