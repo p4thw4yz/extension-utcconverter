@@ -49,6 +49,11 @@ A browser extension for instant UTC and local time conversion with intelligent p
 5. Use the clock icon button to insert the current time
 6. Use the copy icon button to copy the result to your clipboard
 
+### Installation from Add-on Stores
+
+- **Firefox**: Install from [Mozilla Add-ons](https://addons.mozilla.org/en-US/firefox/addon/utc-converter)
+- **Chrome and Edge**: Can be installed manually following the installation instructions above
+
 ### Settings
 
 Access the settings panel by clicking the "Settings" button:
